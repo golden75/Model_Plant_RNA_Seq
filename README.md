@@ -6,7 +6,7 @@ This repository is a usable, publicly available tutorial for analyzing different
 
 
 Contents  
-1.  Introduction  
+1.  [Introduction](#1-introduction)  
 2.  Accessing Raw Data using SRA-Toolkit
 3.  Quality Control using Sickle
 4.  Aligning Reads to a Genome using HISAT2  
