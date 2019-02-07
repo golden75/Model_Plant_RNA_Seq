@@ -10,7 +10,7 @@ Contents
 2.  Accessing Raw Data using SRA-Toolkit
 3.  Quality Control using Sickle
 4.  Aligning Reads to a Genome using HISAT2  
-5.  Transcript Assembly and Quantification with StrigTie  
+5.  Transcript Assembly and Quantification with StringTie  
 6.  Differential Expression using Ballgown
 7.  Topological networking using Cytoscape
 8.  Conclusion   
