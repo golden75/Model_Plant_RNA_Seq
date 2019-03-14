@@ -31,6 +31,12 @@ git clone < name of the git repository >
 ```
 
 This will clone the directory structure as shown below, and you may be albe to follow the rest of the steps in appropiate folders.  
+```
+└── Model_Plant_RNA_Seq
+    ├── LICENSE
+    └── README.md  
+```  
+ 
 
 In this tutorial we will be using SLURM schedular to submit jobs to Xanadu cluster. In each script we will be using it will contain a header section which will allocate the resources for the SLURM schedular. The header section will contain:  
 
