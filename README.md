@@ -61,4 +61,19 @@ Before beginning, we need to understand a few aspects of the Xanadu server. When
 
 ## 2. Accessing the Raw Data using SRA Toolkit  
 
+We know that the SRA contain the read sequences and accessory meta Information from experiments. Rather than downloading experimental data through a browser, we may use the [sratoolkit's](https://www.ncbi.nlm.nih.gov/books/NBK158900/) "fastq-dump" function to directly dump raw read data into the current terminal directory. Let's have a look at this function (it is expected that you have read the Xanadu tutorial, and are familiar with loading modules):  
+
+For our needs, we will simply be using the accession numbers to dump our experimental data into our directory. We know our accession numbers, so let's write a shell script to retrieve our raw reads. There are a variety of text editors available on Xanadu. Use your prefered text editor to write the script as follows:  
+
+```bash
+module load sratoolkit/2.8.2
+
+fastq-dump SRR3498212
+fastq-dump SRR3498213
+fastq-dump SRR3498215
+fastq-dump SRR3498216
+```  
+
+The full script for slurm shedular can be found in the **raw_data** folder by the name [sra_download.sh](/raw_data/sra_download.sh).  
+
 
