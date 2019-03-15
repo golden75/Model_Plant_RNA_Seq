@@ -212,7 +212,7 @@ So the alignment summary:
 
 dfdf
 
-| Command |  Description |  
+| No of Reads |  Unalign |  
 | --- | --- |  
 | git status  | List all new or monified files |  
 | git diff  | Show file differences that havent been staged  |  
