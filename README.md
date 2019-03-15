@@ -76,4 +76,86 @@ fastq-dump SRR3498216
 
 The full script for slurm shedular can be found in the **raw_data** folder by the name [sra_download.sh](/raw_data/sra_download.sh).  
 
+Now lets look at the first 8 lines in the downloaded *SRR3498212.fastq* file.  
+```bash
+head -n 4 SRR3498212.fastq 
+```
+
+which will give us the information on the first read in the file:
+```
+@SRR3498212.1 SN638:767:HC555BCXX:1:1108:2396:1996 length=50
+NTCAATCGGTCAGAGCACCGCCCTGTCAAGGCGGAAGCAGATCGGAAGAG
++SRR3498212.1 SN638:767:HC555BCXX:1:1108:2396:1996 length=50
+#<DDDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+``` 
+ 
+In here we see that first line corrosponds to the sample information followed by the length of the read, and in the second line corrosponds to the nucleotide reads, followed by the "+" sign where if repeats the information in the first line. Then the fourth line corrosponds to the quality score for each nucleotide in the first line.  
+
+
+## 2. Quality Control using Sickle  
+
+Sickle performs quality control on illumina paired-end and single-end short read data using a sliding window. As the window slides along the fastq file, the average score of all the reads contained in the window is calculated. Should the average window score fall beneath a set threshold, [sickle](https://github.com/najoshi/sickle/blob/master/README.md) determines the reads responsible and removes them from the run. After visiting the SRA pages for our data, we see that our data are single end reads. Let's find out what sickle can do with these:  
+```bash 
+module load sickle/1.33
+
+sickle se -f ../raw_data/SRR3498212.fastq -t sanger -o trimmed_SRR3498212.fastq -q 35 -l 45
+sickle se -f ../raw_data/SRR3498213.fastq -t sanger -o trimmed_SRR3498213.fastq -q 35 -l 45
+sickle se -f ../raw_data/SRR3498215.fastq -t sanger -o trimmed_SRR3498215.fastq -q 35 -l 45
+sickle se -f ../raw_data/SRR3498216.fastq -t sanger -o trimmed_SRR3498216.fastq -q 35 -l 45
+```   
+
+ 
+To see the options in the sickle just type `sickle` after loading the module which will give:  
+```bash
+Usage: sickle <command> [options]
+
+Command:
+pe	paired-end sequence trimming
+se	single-end sequence trimming
+```  
+
+Since we have single-end reads, lets look the options:
+```bash
+Usage: sickle se [options] -f <fastq sequence file> -t <quality type> -o <trimmed fastq file>
+
+Options:
+-f, --fastq-file, Input fastq file (required)
+-t, --qual-type, Type of quality values: (required)
+	solexa (CASAVA < 1.3)
+	illumina (CASAVA 1.3 to 1.7)
+	sanger (which is CASAVA >= 1.8)
+-o, --output-file, Output trimmed fastq file (required)
+-q, --qual-threshold, Threshold for trimming based on average quality in a window. Default 20. 
+-l, --length-threshold, Threshold to keep a read based on length after trimming. Default 20 
+```  
+
+The quality may be any score from 0 to 40. The default of 20 is much too low for a robust analysis. We want to select only reads with a quality of 35 or better. Additionally, the desired length of each read is 50bp. Again, we see that a default of 20 is much too low for analysis confidence. We want to select only reads whose lengths exceed 45bp. Lastly, we must know the scoring type. While the quality type is not listed on the SRA pages, most SRA reads use the "sanger" quality type. Unless explicitly stated, try running sickle using the sanger qualities. If an error is returned, try illumina. If another error is returned, lastly try solexa. 
+
+The full script for slurm shedular can be found in the **sickle** folder by the name [sickle_trim.sh](/sickle/sickle_trim.sh).  
+
+
+## 5. Aligning Reads to a Genome using HISAT2  
+
+HISAT2 is a fast and sensitive aligner for mapping next generation sequencing reads against a reference genome. HISAT2 requires two arguments: the reads file being mapped and the indexed genome to which those reads are mapped. Typically, the hisat2-build command is used to make a HISAT index file for the genome. It will create a set of files with the suffix .ht2, these files together build the index. What is an index and why is it helpful? Genome indexing is the same as indexing a tome, like an encyclopedia. It is much easier to locate Information in the vastness of an encyclopedia when you consult the index, which is ordered in an easily navigatable way with pointers to the location of the Information you seek within the encylopedia. Genome indexing is thus the structuring of a genome such that it is ordered in an easily navigatable way with pointers to where we can find whichever gene is being aligned. Let's have a look at how the hisat2-build command works:  
+
+To build the HISAT2 index, simply use:
+```bash
+module load hisat2/2.1.0
+hisat2-build -p 4 ${FASTA_File} ${BASE_NAME}
+```  
+
+So the HISAT2 program options are:
+```
+Usage: hisat2-build [options]* <reference_in> <ht2_index_base>
+
+    reference_in            comma-separated list of files with ref sequences
+    hisat2_index_base       write ht2 data to files with this dir/basename
+
+Options:
+    -p                      number of threads
+```  
+
+As you can see, we simply enter our reference genome files and the desired prefix for our .ht2 files. Now, fortunately for us, Xanadu has many indexed genomes which we may use. To see if there is a hisat2 Arabidopsis thaliana indexed genome we need to look at the Xanadu databases page. We see that our desired indexed genome is in the location /isg/shared/databases/alignerIndex/plant/Arabidopsis/thaliana/Athaliana_HISAT2/. Now we are ready to align our reads using hisat2 (for hisat2, the script is going to be written first with an explanation of the options after).  
+
+
 
