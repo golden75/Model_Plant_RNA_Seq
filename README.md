@@ -212,9 +212,9 @@ So the alignment summary:
 
 dfdf
 
-| No of Reads |  Unalign |  
+| Sample |  No of Reads |  
 | --- | --- |  
-| git status  | List all new or monified files |  
+| SRR3498212.fastq  | 34475799 |  
 | git diff  | Show file differences that havent been staged  |  
 
 Alignment summary:  
