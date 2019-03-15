@@ -217,4 +217,9 @@ dfdf
 | git status  | List all new or monified files |  
 | git diff  | Show file differences that havent been staged  |  
 
+Alignment summary:  
+| No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |  
+| --- | ---| ---| ---| --- |  
+| 34475799 | 33017550 | 1065637  | 392612  | 4.23%  |   
+
 
