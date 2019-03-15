@@ -212,10 +212,14 @@ So the alignment summary:
 
 dfdf
 
-| Sample |  No of Reads | Unalign | Align(1) | Align(>1) | Alignment Rate |    
+| Sample |  No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |    
 | --- | --- | --- | --- | --- | --- |     
-| SRR3498212.fastq  | 34475799 |  33017550 | 1065637 | 392612 | 4.23% |     
-| git diff  | 42033973  |  40774230  | 931377 | 328366 | 3.00% |      
+| SRR3498212  | 34475799 |  33017550 | 1065637 | 392612 | 4.23% |     
+| SRR3498213  | 42033973  |  40774230  | 931377 | 328366 | 3.00% |      
+| SRR3498215  | 31671127  |  31103167  | 465131 | 102829 | 1.79% |   
+| SRR3498216  | 49890217  |  48622480  | 1029943 | 237794 | 2.54% |    
+
+
 
 Alignment summary:  
 | No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |  
