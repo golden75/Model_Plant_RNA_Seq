@@ -203,14 +203,6 @@ hisat2_align/
 When HISAT2 completes its run, it will summarize each of it’s alignments, and it is written to the standard error file, which can be found in the same folder once the run is completed. Also if you want, you can direct each summary to a new file using `--summary-file` option.  
 
 So the alignment summary:  
-| No of Reads |  Unpaired  |  Unalign  |  Align(1)  | Align(>1) |  alignment rate  |   
-| ----------- | ---------- | --------- | ---------- | --------- | ---------------- |  
-|  34475799   |  34475799  | 33017550  | 1065637    | 392612    |   4.23%          |  
-
-
-
-
-dfdf
 
 | Sample |  No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |    
 | --- | --- | --- | --- | --- | --- |     
@@ -220,10 +212,5 @@ dfdf
 | SRR3498216  | 49890217  |  48622480  | 1029943 | 237794 | 2.54% |    
 
 
-
-Alignment summary:  
-| No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |  
-| --- | ---| ---| ---| --- |  
-| 34475799 | 33017550 | 1065637  | 392612  | 4.23%  |   
 
 
