@@ -212,10 +212,10 @@ So the alignment summary:
 
 dfdf
 
-| Sample |  No of Reads |  
-| --- | --- |  
-| SRR3498212.fastq  | 34475799 |  
-| git diff  | Show file differences that havent been staged  |  
+| Sample |  No of Reads | Unalign |   
+| --- | --- | --- |   
+| SRR3498212.fastq  | 34475799 |  33017550 |  
+| git diff  | Show file differences that havent been staged  |  dd  |   
 
 Alignment summary:  
 | No of Reads | Unalign | Align(=1) | Align(>1) | Alignment Rate |  
