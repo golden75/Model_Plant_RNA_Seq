@@ -9,7 +9,7 @@ Contents
 1.  [Introduction](#1-introduction)  
 2.  [Accessing Raw Data using SRA-Toolkit](#2-accessing-the-Raw-Data-using-SRA-Toolkit)
 3.  Quality Control using Sickle
-4.  Aligning Reads to a Genome using HISAT2  
+4.  [Aligning Reads to a Genome using HISAT2](#4-Aligning-Reads-to-a-Genome-using-HISAT2)  
 5.  Transcript Assembly and Quantification with StringTie  
 6.  Differential Expression using Ballgown
 7.  Topological networking using Cytoscape
@@ -76,7 +76,7 @@ fastq-dump SRR3498216
 
 The full script for slurm shedular can be found in the **raw_data** folder by the name [sra_download.sh](/raw_data/sra_download.sh).  
 
-Now lets look at the first 8 lines in the downloaded *SRR3498212.fastq* file.  
+Now lets look at the first 4 lines in the downloaded *SRR3498212.fastq* file.  
 ```bash
 head -n 4 SRR3498212.fastq 
 ```
@@ -134,7 +134,7 @@ The quality may be any score from 0 to 40. The default of 20 is much too low for
 The full script for slurm shedular can be found in the **sickle** folder by the name [sickle_trim.sh](/sickle/sickle_trim.sh).  
 
 
-## 5. Aligning Reads to a Genome using HISAT2  
+## 4. Aligning Reads to a Genome using HISAT2  
 
 HISAT2 is a fast and sensitive aligner for mapping next generation sequencing reads against a reference genome. HISAT2 requires two arguments: the reads file being mapped and the indexed genome to which those reads are mapped. Typically, the hisat2-build command is used to make a HISAT index file for the genome. It will create a set of files with the suffix .ht2, these files together build the index. What is an index and why is it helpful? Genome indexing is the same as indexing a tome, like an encyclopedia. It is much easier to locate Information in the vastness of an encyclopedia when you consult the index, which is ordered in an easily navigatable way with pointers to the location of the Information you seek within the encylopedia. Genome indexing is thus the structuring of a genome such that it is ordered in an easily navigatable way with pointers to where we can find whichever gene is being aligned. Let's have a look at how the hisat2-build command works:  
 
@@ -155,7 +155,55 @@ Options:
     -p                      number of threads
 ```  
 
-As you can see, we simply enter our reference genome files and the desired prefix for our .ht2 files. Now, fortunately for us, Xanadu has many indexed genomes which we may use. To see if there is a hisat2 Arabidopsis thaliana indexed genome we need to look at the Xanadu databases page. We see that our desired indexed genome is in the location /isg/shared/databases/alignerIndex/plant/Arabidopsis/thaliana/Athaliana_HISAT2/. Now we are ready to align our reads using hisat2 (for hisat2, the script is going to be written first with an explanation of the options after).  
+As you can see, we simply enter our reference genome files and the desired prefix for our .ht2 files. Now, fortunately for us, Xanadu has many indexed genomes which we may use. To see if there is a hisat2 Arabidopsis thaliana indexed genome we need to look at the Xanadu databases page. We see that our desired indexed genome is in the location `/isg/shared/databases/alignerIndex/plant/Arabidopsis/thaliana/Athaliana_HISAT2/`. Now we are ready to align our reads using hisat2 (for hisat2, the script is going to be written first with an explanation of the options after).  
 
 
+```bash
+module load hisat2/2.1.0
+
+index_path="/isg/shared/databases/alignerIndex/plant/Arabidopsis/thaliana/Athaliana_HISAT2/thaliana"
+
+hisat2 -p 16 --dta ${index_path} -q ../sickle/trimmed_SRR3498212.fastq -S athaliana_root_1.sam
+hisat2 -p 16 --dta ${index_path} -q ../sickle/trimmed_SRR3498213.fastq -S athaliana_root_2.sam
+hisat2 -p 16 --dta ${index_path} -q ../sickle/trimmed_SRR3498215.fastq -S athaliana_shoot_1.sam
+hisat2 -p 16 --dta ${index_path} -q ../sickle/trimmed_SRR3498216.fastq -S athaliana_shoot_2.sam
+```  
+
+The full script for slurm shedular can be found in the **hisat2_align** folder called [hisat2_align.sh](/hisat2_align/hisat2_align.sh).  
+
+The command options used:
+```
+Usage: hisat2 [options] <ht2-idx> <unpaired-reads> [-S <sam>] 
+
+Options:
+ Input:
+  -q                 query input files are FASTQ .fq/.fastq (default)
+
+ Spliced Alignment:
+  --dta              reports alignments tailored for transcript assemblers
+
+ Output:
+  -S                 SAM out file (default: stdout)
+
+ Performance:
+  -p/--threads <int> number of alignment threads to launch  
+
+```  
+
+Once the mapping is completed, the file structure is as follows:
+```
+hisat2_align/
+├── athaliana_root_1.sam
+├── athaliana_root_2.sam
+├── athaliana_shoot_1.sam
+├── athaliana_shoot_2.sam
+└── hisat2_align.sh
+```  
+
+When HISAT2 completes its run, it will summarize each of it’s alignments, and it is written to the standard error file, which can be found in the same folder once the run is completed. Also if you want, you can direct each summary to a new file using `--summary-file` option.  
+
+So the alignment summary:  
+ No of Reads |  Unpaired  |  Unalign  |  Align(1)  | Align(>1) |  alignment rate  
+ ----------- | ---------- | --------- | ---------- | --------- | ---------------
+  34475799   |  34475799  | 33017550  | 1065637    | 392612    |   4.23%  
 
